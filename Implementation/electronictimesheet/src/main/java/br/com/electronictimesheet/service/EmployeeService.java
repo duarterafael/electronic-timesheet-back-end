@@ -2,6 +2,7 @@ package br.com.electronictimesheet.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.electronictimesheet.dao.EmployeeRepository;
 import br.com.electronictimesheet.model.Employee;
+import br.com.electronictimesheet.util.Utils;
 @Service
 public class EmployeeService {
 	@Autowired
@@ -20,8 +22,8 @@ public class EmployeeService {
 	}
 
 	public Employee findByPis(String pis) {
-		Employee employee = employeeRepository.findByPis(pis).get();
-		return employee;
+		Optional<Employee> optionalEmployee = employeeRepository.findByPis(pis);
+		return (Employee) Utils.returnValueOrDefault(optionalEmployee);
 	}
 
 	public boolean isEmployeeExist(Employee employee) {
@@ -32,10 +34,11 @@ public class EmployeeService {
 		employeeRepository.save(employee);
 	}
 
-	public Employee findById(int id) {
-		Employee employee = new Employee("123", "123", "Rafael Duarte");
-		return employee;
+	public Employee findById(Long id) {
+		Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+		return (Employee) Utils.returnValueOrDefault(optionalEmployee);
 
 	}
+	
 
 }

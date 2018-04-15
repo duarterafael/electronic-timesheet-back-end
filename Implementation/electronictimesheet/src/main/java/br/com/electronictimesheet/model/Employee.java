@@ -21,7 +21,6 @@ public class Employee {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@UniqueElements
 	private String pis;
 	
 	private String password;
