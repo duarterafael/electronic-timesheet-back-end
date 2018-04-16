@@ -1,19 +1,18 @@
 package br.com.electronictimesheet.model;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.UniqueElements;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import org.hibernate.annotations.LazyCollection;
+import org.springframework.context.annotation.Lazy;
 
 @Entity
 public class Employee {
@@ -21,13 +20,17 @@ public class Employee {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@NotNull
 	private String pis;
 	
+	@NotNull
 	private String password;
+	
+	@NotNull
 	private String fullNane;
 	
 	@OneToMany(mappedBy = "employee")
-    private List<Clockin> clocksin = new LinkedList<Clockin>();
+	private List<Clockin> clocksins = new LinkedList<Clockin>();
 
 	private Employee() {}
 
@@ -71,11 +74,11 @@ public class Employee {
 	}
 
 	public List<Clockin> getClocksin() {
-		return clocksin;
+		return clocksins;
 	}
 
 	public void setClocksin(List<Clockin> clocksin) {
-		this.clocksin = clocksin;
+		this.clocksins = clocksin;
 	}
 
 }

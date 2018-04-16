@@ -68,19 +68,17 @@ public class EmployeeController {
     @RequestMapping(value = "/employee", method = RequestMethod.POST)
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee, UriComponentsBuilder ucBuilder) {
         logger.info("Creating employee : {}", employee);
- 
+        
         if (employeeService.isEmployeeExist(employee)) {
         	String errorMsg = String.format("Unable to create. A employee with pis %s already exist.", employee.getPis());
             logger.error(errorMsg);
             return new ResponseEntity(new CustomErrorType(errorMsg),HttpStatus.CONFLICT);
         }
-        employee.getClocksin().add(new Clockin(employee, LocalDateTime.now()));
-        employee.getClocksin().add(new Clockin(employee, LocalDateTime.now()));
         employeeService.save(employee);
  
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/api/employee/{id}").buildAndExpand(employee.getId()).toUri());
-        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
+        return new ResponseEntity<Employee>(employee, headers, HttpStatus.CREATED);
     }    
     
 }

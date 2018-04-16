@@ -6,7 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.context.annotation.Lazy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,10 +21,12 @@ public class Clockin {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@JsonIgnore
 	@ManyToOne
+    @JoinColumn(name = "employee_id")
+	@JsonIgnore
 	private Employee employee;
 
+	@NotNull
 	private LocalDateTime dateTime;
 	
 	private Clockin() {}

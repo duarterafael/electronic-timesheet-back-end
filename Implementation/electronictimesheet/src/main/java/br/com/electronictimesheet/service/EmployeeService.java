@@ -1,11 +1,9 @@
 package br.com.electronictimesheet.service;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import br.com.electronictimesheet.dao.EmployeeRepository;
@@ -15,7 +13,7 @@ import br.com.electronictimesheet.util.Utils;
 public class EmployeeService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
-
+	
 	public List<Employee> findAll() {
 		
 		return employeeRepository.findAll();
