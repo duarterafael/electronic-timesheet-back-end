@@ -12,8 +12,11 @@ import br.com.electronictimesheet.model.Employee;
 
 @Component
 public interface ClockinRepository extends JpaRepository<Clockin, Long> {
-    Optional<Clockin> findByEmployee(Employee employee);
+    public Optional<Clockin> findByEmployee(Employee employee);
     
-//    @Query("SELECT c FROM clockin c WHERE c.employee_id = employee_id")
     public List<Clockin> findByemployeeId(Long employee_id);
+    
+    public Optional<Clockin> findTop1ByOrderByIdDesc();
+    
+    
 }
