@@ -1,6 +1,5 @@
 package br.com.electronictimesheet.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.electronictimesheet.model.Clockin;
 import br.com.electronictimesheet.model.Employee;
 import br.com.electronictimesheet.service.EmployeeService;
 import br.com.electronictimesheet.util.CustomErrorType;

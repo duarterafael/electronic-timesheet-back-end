@@ -20,6 +20,7 @@ import br.com.electronictimesheet.model.Clockin;
 import br.com.electronictimesheet.model.Employee;
 import br.com.electronictimesheet.service.ClockinService;
 import br.com.electronictimesheet.service.EmployeeService;
+import br.com.electronictimesheet.util.Constant;
 import br.com.electronictimesheet.util.CustomErrorType;
 
 @RestController
@@ -46,16 +47,27 @@ public class ClockinController {
     		logger.error(errorMsg);
     		return new ResponseEntity(new CustomErrorType(errorMsg), HttpStatus.NOT_FOUND);
     	}
+    	LocalDateTime now = LocalDateTime.now();
     	
-    	Clockin clockin = new Clockin(employee, LocalDateTime.now());
-    	
-    	logger.info("Creating clockin: {}", clockin);
+    	if(!clockinService.hasClockinsBetweenDateTime(employee, now.minusMinutes(Constant.TIME_INTERVAL_INVALID_SAVE_CLOCK_IN_MINUTES), now))
+    	{
+    		Clockin clockin = new Clockin(employee, now);
+        	
+        	logger.info("Creating clockin: {}", clockin);
 
-        clockinService.save(clockin);
- 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/api/clockin/{id}").buildAndExpand(clockin.getId()).toUri());
-        return new ResponseEntity<Clockin>(clockin, headers, HttpStatus.CREATED);
+            clockinService.save(clockin);
+     
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(ucBuilder.path("/api/clockin/{id}").buildAndExpand(clockin.getId()).toUri());
+            return new ResponseEntity<Clockin>(clockin, headers, HttpStatus.CREATED);
+    	}else
+    	{
+    		String errorMsg = String.format("Unable to save. It has been registered a timestamp in the last %s minute(s).", Constant.TIME_INTERVAL_INVALID_SAVE_CLOCK_IN_MINUTES);
+    		logger.error(errorMsg);
+    		return new ResponseEntity(new CustomErrorType(errorMsg), HttpStatus.BAD_REQUEST);
+    	}
+    	
+    	
     }
     
     @RequestMapping(value = "employee/{id}/clockin", method = RequestMethod.GET)
@@ -67,6 +79,7 @@ public class ClockinController {
     		logger.error(errorMsg);
     		return new ResponseEntity(new CustomErrorType(errorMsg), HttpStatus.NOT_FOUND);
     	}
+    	
     	List<Clockin> clockins = clockinService.retrieveClockinsByEmployee(employeeId);
     	 
         return new ResponseEntity<List<Clockin>>(clockins, HttpStatus.CREATED);
