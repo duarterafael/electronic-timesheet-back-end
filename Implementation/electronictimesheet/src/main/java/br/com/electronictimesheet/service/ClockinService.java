@@ -3,7 +3,6 @@ package br.com.electronictimesheet.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,19 +16,16 @@ public class ClockinService {
 	@Autowired
 	private ClockinRepository clockinRepository;
 	
-	private final AtomicLong counterID = new AtomicLong();
-	
-	
-	public Clockin retrieveClockinsBetweenDateTime(Employee employee, LocalDateTime startDateTime, LocalDateTime endDateTime)
+	public List<Clockin> retrieveClockinsBetweenDateTime(Employee employee, LocalDateTime startDateTime, LocalDateTime endDateTime)
 	{
-		Optional<Clockin> clockin = clockinRepository.findByEmployeeAndDateTimeBetween(employee, startDateTime, endDateTime);
-		return (Clockin) Utils.returnValueOrDefault(clockin);
+		List<Clockin> clocksin = clockinRepository.findByEmployeeAndDateTimeBetweenOrderByDateTimeDesc(employee, startDateTime, endDateTime);
+		return clocksin;
  	}
 	
 	public boolean hasClockinsBetweenDateTime(Employee employee, LocalDateTime startDateTime, LocalDateTime endDateTime)
 	{
-		Clockin lastCockin = retrieveClockinsBetweenDateTime(employee, startDateTime, endDateTime);
-    	return lastCockin != null;
+		List<Clockin> clocksin = retrieveClockinsBetweenDateTime(employee, startDateTime, endDateTime);
+    	return clocksin != null && !clocksin.isEmpty();
 	}
 	
 	

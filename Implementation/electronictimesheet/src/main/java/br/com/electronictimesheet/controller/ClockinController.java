@@ -1,11 +1,18 @@
 package br.com.electronictimesheet.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.electronictimesheet.model.Clockin;
+import br.com.electronictimesheet.model.DailyReport;
 import br.com.electronictimesheet.model.Employee;
 import br.com.electronictimesheet.service.ClockinService;
+import br.com.electronictimesheet.service.DailyReportService;
 import br.com.electronictimesheet.service.EmployeeService;
 import br.com.electronictimesheet.util.Constant;
 import br.com.electronictimesheet.util.CustomErrorType;
@@ -32,6 +41,10 @@ public class ClockinController {
 	private ClockinService clockinService;
 	@Autowired
 	private EmployeeService employeeService;
+	
+	@Autowired
+	private DailyReportService dailyReportService;
+	
 	/**
      * 
      * @param employee
@@ -69,7 +82,12 @@ public class ClockinController {
     	
     	
     }
-    
+    /**
+     * 
+     * @param employeeId
+     * @param ucBuilder
+     * @return
+     */
     @RequestMapping(value = "employee/{id}/clockin", method = RequestMethod.GET)
     public ResponseEntity<?> retrieveClockinsById(@PathVariable("id") Long employeeId, UriComponentsBuilder ucBuilder) {
     	Employee employee = employeeService.findById(employeeId);
@@ -86,35 +104,37 @@ public class ClockinController {
     }    
 
  
-	//	 /**
-//	  * 
-//	  * @return
-//	  */
-//    @RequestMapping(value = "/employee", method = RequestMethod.GET)
-//    public ResponseEntity<List<Employee>> listAllEmployees() {
-//    	logger.info("Retrieve all  employee");
-//    	List<Employee> employees = clockinService.findAll();
-//        if (employees.isEmpty()) {
-//            return new ResponseEntity(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<List<Employee>>(employees, HttpStatus.OK);
-//    }
-    
-//    /**
-//     * 
-//     * @param id
-//     * @return
-//     */
-//    @RequestMapping(value = "/employee/{id}", method = RequestMethod.GET)
-//    public ResponseEntity<?> getEmployeeById(@PathVariable("id") Long id ) {
-//        logger.info("Fetching employee with id {}", id);
-//        Employee employee = clockinService.findById(id);
-//        if (employee == null) {
-//            logger.error("employee with pis {} not found.", id);
-//            return new ResponseEntity(new CustomErrorType(String.format("Employee with id %s not found", id)), HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<Employee>(employee, HttpStatus.OK);
-//    }
+    @RequestMapping(value = "employee/{id}/clockin/dailyreport/{datetime}", method = RequestMethod.GET)
+    public ResponseEntity<?> dailyReport(@PathVariable("id") Long employeeId, @PathVariable("datetime") @DateTimeFormat(pattern="yyyy-MM-dd") Date inputDate, UriComponentsBuilder ucBuilder) {
+    	Employee employee = employeeService.findById(employeeId);
+    	if(null == employee)
+    	{
+    		String errorMsg = String.format("Unable to save. Employee with id %s not found.", employeeId);
+    		logger.error(errorMsg);
+    		return new ResponseEntity(new CustomErrorType(errorMsg), HttpStatus.NOT_FOUND);
+    	}
+    	LocalDateTime startDateTime = LocalDateTime.ofInstant(inputDate.toInstant(), ZoneId.systemDefault());
+    	LocalDateTime endDateTime = LocalDateTime.ofInstant(inputDate.toInstant(), ZoneId.systemDefault()).plusHours(23).plusMinutes(59).plusSeconds(59).plusNanos(999999999);
+    	
+    	List<Clockin> dailyClocksin = clockinService.retrieveClockinsBetweenDateTime(employee, startDateTime, endDateTime);
+    	
+    	boolean isMissingTimestampRecord = (dailyClocksin.size() % 2) == 0;
+    	if(isMissingTimestampRecord)
+    	{
+    		LocalDate localInputDate = inputDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    		DailyReport dailyReport = dailyReportService.generateDailyReport(dailyClocksin, localInputDate);
+    		return new ResponseEntity<DailyReport>(dailyReport, HttpStatus.OK);
+    		
+    	}else
+    	{
+    		String errorMsg = "Unable generate daily report. It is missing a timestamp record.";
+    		logger.error(errorMsg);
+    		return new ResponseEntity(new CustomErrorType(errorMsg), HttpStatus.BAD_REQUEST);
+    	}
+    	 
+        
+    }    
+
     
        
 }
