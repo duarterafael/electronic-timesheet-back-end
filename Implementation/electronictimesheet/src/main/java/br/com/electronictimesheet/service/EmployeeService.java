@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.electronictimesheet.dao.EmployeeRepository;
 import br.com.electronictimesheet.model.Employee;
+import br.com.electronictimesheet.util.CustomErrorType;
 import br.com.electronictimesheet.util.Utils;
 @Service
 public class EmployeeService {
@@ -17,6 +18,21 @@ public class EmployeeService {
 	public List<Employee> findAll() {
 		
 		return employeeRepository.findAll();
+	}
+	
+	public CustomErrorType validateFields(Employee employee)
+	{
+		if(employee.getFullNane() == null || employee.getFullNane().isEmpty())
+		{
+			return new CustomErrorType("The field 'fullNane' is mandatory.");
+		}else if(employee.getPis() == null || employee.getPis().isEmpty())
+		{
+			return new CustomErrorType("The field 'pis' is mandatory.");
+		}else if(employee.getPassword() == null || employee.getPassword().isEmpty())
+		{
+			return new CustomErrorType("The field 'password' is mandatory.");
+		}
+		return null;
 	}
 
 	public Employee findByPis(String pis) {
@@ -35,7 +51,6 @@ public class EmployeeService {
 	public Employee findById(Long id) {
 		Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 		return (Employee) Utils.returnValueOrDefault(optionalEmployee);
-
 	}
 	
 

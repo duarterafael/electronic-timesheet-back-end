@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.LazyCollection;
 import org.springframework.context.annotation.Lazy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Employee {
 	@Id
@@ -24,6 +26,7 @@ public class Employee {
 	private String pis;
 	
 	@NotNull
+	@JsonIgnore
 	private String password;
 	
 	@NotNull

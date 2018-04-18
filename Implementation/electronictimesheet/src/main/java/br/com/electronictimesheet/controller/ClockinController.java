@@ -47,13 +47,20 @@ public class ClockinController {
 	private ReportService reportService;
 
 	/**
+	 * Save a new a timestamp to a specific employee.
 	 * 
-	 * @param employee
-	 * @param ucBuilder
-	 * @return
+	 * @param employeeId:
+	 *            Employee identifier (primary key).
+	 * @param ucBuilder:
+	 *            Assing the url to find the new timestamp in header, If save with
+	 *            sucess.
+	 * @return: NOT_FOUND(404): Employee not found for id informed. Returns a error
+	 *          message. BAD_REQUEST(400): It has been registered a timestamp in the
+	 *          last 1 minute(s). Returns a error message. CREATED(201): The
+	 *          timestamp was created with success. Returns timestamp datas.
 	 */
 	@RequestMapping(value = "employee/{id}/clockin", method = RequestMethod.POST)
-	public ResponseEntity<?> createEmployee(@PathVariable("id") Long employeeId, UriComponentsBuilder ucBuilder) {
+	public ResponseEntity<?> createClockin(@PathVariable("id") Long employeeId, UriComponentsBuilder ucBuilder) {
 		Employee employee = employeeService.findById(employeeId);
 		if (null == employee) {
 			String errorMsg = String.format("Unable to save. Employee with id %s not found.", employeeId);
@@ -84,10 +91,13 @@ public class ClockinController {
 	}
 
 	/**
+	 * Retrieve the list of timestamp relative a specific employee.
 	 * 
-	 * @param employeeId
-	 * @param ucBuilder
-	 * @return
+	 * @param employeeId:
+	 *            Employee identifier (foreign key).
+	 * @return: NOT_FOUND(404): Employee not found for id informed. Returns a error.
+	 *          message. OK(200): Timestamp registers found successfully. Returns a
+	 *          list of timestamp registers datas.
 	 */
 	@RequestMapping(value = "employee/{id}/clockin", method = RequestMethod.GET)
 	public ResponseEntity<?> retrieveClockinsById(@PathVariable("id") Long employeeId, UriComponentsBuilder ucBuilder) {
@@ -100,9 +110,19 @@ public class ClockinController {
 
 		List<Clockin> clockins = clockinService.retrieveClockinsByEmployee(employeeId);
 
-		return new ResponseEntity<List<Clockin>>(clockins, HttpStatus.CREATED);
+		return new ResponseEntity<List<Clockin>>(clockins, HttpStatus.OK);
 	}
 
+	/**
+	 * Retrieve daily report to a specific employee.
+	 * @param employeeId:
+	 * 			 Employee identifier (foreign key).
+	 * @param inputDate:
+	 * 			Target data of daily report. Format: yyyy-MM-dd.
+	 * @return:
+	 * 		NOT_FOUND(404): Employee not found for id informed. Returns a error.
+	 * 		OK(200): The daily report was generated successfully. Returns daily report datas.
+	 */
 	@RequestMapping(value = "employee/{id}/clockin/dailyreport/{datetime}", method = RequestMethod.GET)
 	public ResponseEntity<?> dailyReport(@PathVariable("id") Long employeeId,
 			@PathVariable("datetime") @DateTimeFormat(pattern = "yyyy-MM-dd") Date inputDate,
@@ -128,13 +148,30 @@ public class ClockinController {
 	}
 
 	/**
-	 * 
-	 * @param employeeId
-	 * @param monthCode
-	 * @param ucBuilder
-	 * @return
+	 * Retrieve monthly report to a specific employee.
+	 * @param employeeId:
+	 * 			 Employee identifier (foreign key).
+	 * @param year:
+	 * 			Target year of monthly report. Range 1970 until current year.
+	 * @param monthCode:
+	 * 			Target month of monthly report.
+	 * 			Possible values:
+	 * 			1 – January
+	 *			2 – February
+	 *			3 – March
+	 *			4 – April
+	 *			5 – May
+	 *			6 – June
+	 *			7 – July
+	 *			8 – August
+	 *			9 – September
+	 *			10 – October
+	 *			11 – November
+	 *			12 – December
+	 * @return:
+	 * 		NOT_FOUND(404): Employee not found for id informed. Returns a error.
+	 * 		OK(200): The daily report was generated successfully. Returns daily report datas.
 	 */
-
 	@RequestMapping(value = "employee/{id}/clockin/monthlyreport/year/{year}/month/{monthCode}", method = RequestMethod.GET)
 	public ResponseEntity<?> monthlyReport(@PathVariable("id") Long employeeId, @PathVariable("year") int year,
 			@PathVariable("monthCode") int monthCode, UriComponentsBuilder ucBuilder) {
@@ -160,20 +197,22 @@ public class ClockinController {
 			logger.error(errorMsg);
 			return new ResponseEntity(new CustomErrorType(errorMsg), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		LocalDate firstDayOfMonth = LocalDate.of(year, monthCode, 1);
 		LocalDate lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
-		
+
 		List<DailyReport> monthlyReport = new LinkedList<>();
-		for(int currentDayIndex = firstDayOfMonth.getDayOfMonth(); currentDayIndex <= lastDayOfMonth.getDayOfMonth(); currentDayIndex++)
-		{
+		for (int currentDayIndex = firstDayOfMonth.getDayOfMonth(); currentDayIndex <= lastDayOfMonth
+				.getDayOfMonth(); currentDayIndex++) {
 			LocalDateTime startDateTime = LocalDateTime.of(year, monthCode, currentDayIndex, 0, 0);
-			LocalDateTime endDateTime = startDateTime.plusHours(23).plusMinutes(59).plusSeconds(59).plusNanos(999999999);
-			List<Clockin> dailyClocksin = clockinService.retrieveClockinsBetweenDateTime(employee, startDateTime, endDateTime);
-			
+			LocalDateTime endDateTime = startDateTime.plusHours(23).plusMinutes(59).plusSeconds(59)
+					.plusNanos(999999999);
+			List<Clockin> dailyClocksin = clockinService.retrieveClockinsBetweenDateTime(employee, startDateTime,
+					endDateTime);
+
 			monthlyReport.add(reportService.generateDailyReport(dailyClocksin, startDateTime.toLocalDate()));
 		}
-		
+
 		return new ResponseEntity<List<DailyReport>>(monthlyReport, HttpStatus.OK);
 
 	}
