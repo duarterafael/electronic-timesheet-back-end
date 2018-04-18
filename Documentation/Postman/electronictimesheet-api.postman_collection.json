@@ -1,0 +1,240 @@
+{
+	"id": "6092cdff-dca6-42b1-88da-fd467ac16dbb",
+	"name": "electronictimesheet-api",
+	"description": "",
+	"auth": {
+		"type": "basic",
+		"basic": []
+	},
+	"events": null,
+	"variables": [],
+	"order": [
+		"a7d7a359-6581-4b68-9445-1e6eeb666c93",
+		"96bece2d-69a1-4de9-add3-dd8205ccaf5e",
+		"bdc98001-b61c-45bc-899c-5be20b7240d0",
+		"3f694dae-4c37-4101-aed1-32bdc1e17935",
+		"88148f33-6a73-4759-981f-7e48c8193778",
+		"a4e8db58-8b1a-4448-bf5a-0c016f076c39",
+		"28d03c3d-72aa-4c3d-9c94-399fca20539b"
+	],
+	"folders_order": [],
+	"folders": [],
+	"requests": [
+		{
+			"id": "28d03c3d-72aa-4c3d-9c94-399fca20539b",
+			"name": "http://localhost:8080/api/employee/1/clockin/dailyreport/2018-04-15",
+			"url": "http://localhost:8080/api/employee/1/clockin/dailyreport/2018-04-15",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				],
+				"type": "basic"
+			},
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "3f694dae-4c37-4101-aed1-32bdc1e17935",
+			"name": "http://localhost:8080/api/employee/2/clockin",
+			"url": "http://localhost:8080/api/employee/1/clockin",
+			"description": "Retrieve clockins by employee id",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				],
+				"type": "basic"
+			},
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "88148f33-6a73-4759-981f-7e48c8193778",
+			"name": "http://localhost:8080/api/employee/3/clockin",
+			"url": "http://localhost:8080/api/employee/1/clockin",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				],
+				"type": "basic"
+			},
+			"events": [],
+			"folder": null,
+			"rawModeData": "",
+			"headers": "Content-Type: application/json\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "96bece2d-69a1-4de9-add3-dd8205ccaf5e",
+			"name": "http://localhost:8080/api/employee/1",
+			"url": "http://localhost:8080/api/employee/1",
+			"description": "Retrieve employee by id",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				],
+				"type": "basic"
+			},
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "a4e8db58-8b1a-4448-bf5a-0c016f076c39",
+			"name": "http://localhost:8080/api/employee/1/clockin/monthlyreport/year/2018/month/4",
+			"url": "http://localhost:8080/api/employee/1/clockin/monthlyreport/year/2018/month/4",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				],
+				"type": "basic"
+			},
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "a7d7a359-6581-4b68-9445-1e6eeb666c93",
+			"name": "http://localhost:8080/api/employee",
+			"url": "http://localhost:8080/api/employee",
+			"description": "Get All employees",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				]
+			},
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "bdc98001-b61c-45bc-899c-5be20b7240d0",
+			"name": "http://localhost:8080/api/employee",
+			"url": "http://localhost:8080/api/employee",
+			"description": "Save employee",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"enabled": true
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": {
+				"basic": [
+					{
+						"key": "password",
+						"value": "123"
+					},
+					{
+						"key": "username",
+						"value": "admin"
+					}
+				],
+				"type": "basic"
+			},
+			"events": [],
+			"folder": null,
+			"rawModeData": "{\r\n\t\"pis\": \"789123123\",\r\n\t\"password\": \"789123\",\r\n\t\"fullNane\": \"Rafael Duarte\"\r\n}",
+			"headers": "Content-Type: application/json\n",
+			"pathVariables": {}
+		}
+	]
+}
