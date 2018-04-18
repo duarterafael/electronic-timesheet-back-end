@@ -26,7 +26,6 @@ public class Employee {
 	private String pis;
 	
 	@NotNull
-	@JsonIgnore
 	private String password;
 	
 	@NotNull
