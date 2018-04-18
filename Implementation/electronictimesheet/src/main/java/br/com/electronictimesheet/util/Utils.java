@@ -1,5 +1,6 @@
 package br.com.electronictimesheet.util;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -44,8 +45,15 @@ public class Utils {
 		}
 		return  amount;
 	}
-
+	public static boolean isSameDay(LocalDateTime datetime1, LocalDateTime datetime2) {
+		return datetime1.getYear() == datetime2.getYear() && datetime1.getMonth() == datetime2.getMonth()
+				&& datetime1.getDayOfYear() == datetime2.getDayOfYear();
+	}
 	
+	public static boolean isWorkDay(LocalDateTime dateTime) {
+		return dateTime.getDayOfWeek() != DayOfWeek.SATURDAY && dateTime.getDayOfWeek() != DayOfWeek.SUNDAY;
+	}
+
 	
 
 }

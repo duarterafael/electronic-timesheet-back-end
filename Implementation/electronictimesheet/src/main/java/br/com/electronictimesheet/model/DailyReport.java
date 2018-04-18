@@ -11,16 +11,16 @@ public class DailyReport {
 	private List<Clockin> clocksin;
 	private LocalDate date;
 	private LocalTime amountWorkTime;
-	private LocalTime amountExtraTime;
+	private LocalTime amountOuverTime;
 	private RestType restType;
 	
-	public DailyReport(List<Clockin> clocksin, LocalDate date, LocalTime amountWorkTime, LocalTime amountExtraTime,
+	public DailyReport(List<Clockin> clocksin, LocalDate date, LocalTime amountWorkTime, LocalTime amountOuverTime,
 			RestType restType) {
 		super();
 		this.clocksin = clocksin;
 		this.date = date;
 		this.amountWorkTime = amountWorkTime;
-		this.amountExtraTime = amountExtraTime;
+		this.amountOuverTime = amountOuverTime;
 		this.restType = restType;
 	}
 
@@ -32,8 +32,8 @@ public class DailyReport {
 		return amountWorkTime;
 	}
 
-	public LocalTime getAmountExtraTime() {
-		return amountExtraTime;
+	public LocalTime getAmountOuverTime() {
+		return amountOuverTime;
 	}
 
 	public RestType getRestType() {
